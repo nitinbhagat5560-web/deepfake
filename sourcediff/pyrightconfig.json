@@ -1,0 +1,7 @@
+{
+  "extraPaths": [
+    "sourcediff",
+    "sourcediff/tools",
+    "sourcediff/tests"
+  ]
+}

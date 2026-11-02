@@ -1,0 +1,12 @@
+# The exact versions this project was tested with (Python 3.13.16, Linux).
+# If the loose requirements.txt breaks in the future, install these instead.
+numpy==2.5.3
+opencv-python-headless==5.0.0.93
+scikit-image==0.26.0
+faiss-cpu==1.15.1
+fastapi==0.146.0
+uvicorn==0.53.0
+python-multipart==0.0.32
+httpx2==2.16.0
+pytest==9.1.1
+PyMySQL==1.1.2

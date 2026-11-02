@@ -1,0 +1,2 @@
+# Optional local inference backend; no hosted inference/API account is used.
+torch>=2.6

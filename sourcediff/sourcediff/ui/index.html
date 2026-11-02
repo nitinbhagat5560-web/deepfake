@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SourceDiff</title>
+  <style>
+    :root {
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --ink: #14181f;
+      --muted: #5b6573;
+      --line: #dfe3e8;
+      --ok: #17803d;
+      --ok-bg: #e5f5ea;
+      --bad: #b3261e;
+      --bad-bg: #fbe9e7;
+      --warn: #8a5a00;
+      --warn-bg: #fdf3dc;
+      --neutral: #334155;
+      --neutral-bg: #e8edf3;
+      --accent: #1d4ed8;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1318;
+        --panel: #181d24;
+        --ink: #e8ecf1;
+        --muted: #9aa6b4;
+        --line: #2a323c;
+        --ok: #5bd48a;
+        --ok-bg: #12301f;
+        --bad: #ff8a80;
+        --bad-bg: #3a1714;
+        --warn: #f2c366;
+        --warn-bg: #33270d;
+        --neutral: #c7d2e0;
+        --neutral-bg: #222b36;
+        --accent: #7aa2ff;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
+
+    .wrap {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 64px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0 0 4px;
+    }
+
+    .sub {
+      color: var(--muted);
+      margin: 0 0 20px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 20px;
+    }
+
+    .tabs button {
+      background: none;
+      border: 0;
+      color: var(--muted);
+      padding: 10px 14px;
+      cursor: pointer;
+      font: inherit;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+    }
+
+    .tabs button[aria-selected="true"] {
+      color: var(--ink);
+      border-bottom-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    input[type=text],
+    input[type=password],
+    input[type=file],
+    select,
+    textarea {
+      width: 100%;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 2fr 2fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    @media (max-width: 720px) {
+      .row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    button.primary {
+      background: var(--accent);
+      color: #fff;
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 18px;
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    button.primary:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    button.ghost {
+      background: none;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 7px 12px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    button.danger {
+      color: #b42318;
+      border-color: #e9b4ae;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 64px;
+    }
+
+    .grid2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .grid2 .span2 {
+      grid-column: 1 / -1;
+    }
+
+    @media (max-width: 720px) {
+      .grid2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .grid2 .hint {
+      margin: 4px 0 0;
+    }
+
+    label .req {
+      color: var(--bad);
+    }
+
+    label.check {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+      font-weight: 400;
+      margin: 6px 0 14px;
+    }
+
+    label.check input {
+      margin-top: 4px;
+    }
+
+    .okmsg {
+      color: var(--ok);
+      font-weight: 600;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 8px;
+    }
+
+    .banner {
+      border-radius: 10px;
+      padding: 16px 18px;
+      margin-bottom: 14px;
+    }
+
+    .banner h2 {
+      margin: 0 0 4px;
+      font-size: 22px;
+    }
+
+    .banner p {
+      margin: 0;
+    }
+
+    .v-authentic {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .v-differs {
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .v-partial {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .v-cant {
+      background: var(--neutral-bg);
+      color: var(--neutral);
+    }
+
+    .v-matched {
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .warn {
+      background: var(--warn-bg);
+      color: var(--warn);
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin: 8px 0;
+      font-size: 14px;
+    }
+
+    .note {
+      background: var(--neutral-bg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 8px 0;
+      font-weight: 600;
+    }
+
+    h3 {
+      font-size: 15px;
+      margin: 18px 0 6px;
+    }
+
+    ul {
+      margin: 4px 0 0 18px;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      text-align: left;
+      padding: 6px 8px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    td.mono,
+    .mono {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 12.5px;
+      word-break: break-all;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .s-agrees {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .s-identical {
+      background: var(--ok-bg);
+      color: var(--ok);
+    }
+
+    .s-differs {
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .s-not_run,
+    .s-na {
+      background: var(--neutral-bg);
+      color: var(--neutral);
+    }
+
+    img.cmp {
+      max-width: 100%;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    img.video-timeline {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+    }
+
+    .transcript-box {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin: 10px 0;
+    }
+
+    .transcript-quote {
+      font-style: italic;
+      color: #0f172a;
+      margin: 4px 0 10px;
+      padding-left: 10px;
+      border-left: 3px solid var(--accent);
+    }
+
+    .diff-tag-replace {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .diff-tag-delete {
+      background: #fef3c7;
+      color: #92400e;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .diff-tag-insert {
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    .sync-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    .sync-card {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .sync-card .lbl {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .sync-card .val {
+      font-size: 17px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .foot {
+      color: var(--muted);
+      font-size: 12.5px;
+      margin-top: 16px;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .err {
+      color: var(--bad);
+      font-weight: 600;
+    }
+
+    .account-bar {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin: -12px 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>SourceDiff</h1>
+    <p class="sub">Two doors: Image and Video. Compare uploads with trusted originals; audio is analyzed only inside
+      video.</p>
+    <div class="account-bar"><span id="account-name"></span><button class="ghost" id="logout" type="button">Sign
+        out</button><a href="/login" class="ghost" id="login-link" style="text-decoration:none;display:none;">Sign in /
+        Register</a></div>
+
+    <div class="tabs" role="tablist">
+      <button role="tab" id="tab-check" aria-selected="true">Check a file</button>
+      <button role="tab" id="tab-history" aria-selected="false">History</button>
+      <button role="tab" id="tab-library" aria-selected="false">Library</button>
+    </div>
+
+    <section id="view-check">
+      <form id="form" class="panel">
+        <div class="row">
+          <div><label for="user">Your name</label><input type="text" id="user" value="guest" maxlength="64"
+              autocomplete="off"></div>
+          <div><label for="file">Image or video file</label><input type="file" id="file" required
+              accept=".jpg,.jpeg,.png,.webp,.bmp,.mp4,.mov,.mkv,.webm,.avi"></div>
+          <div><label for="path2-model">Fallback model</label><select id="path2-model">
+              <option value="yermandy/GenD_PE_L">GenD PE (experimental, weak validation)</option>
+              <option value="yermandy/GenD_CLIP_L_14">GenD CLIP (experimental, weak validation)</option>
+              <option value="yermandy/GenD_DINOv3_L">GenD DINOv3 (experimental, weak validation)</option>
+              <option value="Smaug">Smaug (experimental, no activation threshold)</option>
+            </select></div>
+          <div><label for="path2-mode">Fallback mode</label><select id="path2-mode">
+              <option value="Off">Face analysis</option>
+              <option value="GenD">Face + whole-frame GenD</option>
+              <option value="Smaug">Smaug whole-frame</option>
+            </select></div>
+          <button class="primary" id="go" type="submit">Check</button>
+        </div>
+        <p class="hint" id="health">Loading library status…</p>
+      </form>
+      <div id="result"></div>
+    </section>
+
+    <section id="view-history" class="hidden">
+      <div class="panel">
+        <div class="row" style="grid-template-columns: 1fr auto auto auto;">
+          <div><label for="huser">Show only this name (empty = everyone)</label><input type="text" id="huser"
+              autocomplete="off"></div>
+          <button class="ghost" id="hrefresh" type="button">Refresh</button>
+          <button class="ghost" id="hverify" type="button">Verify chain</button>
+          <button class="ghost" id="hforget" type="button">Forget this name</button>
+        </div>
+        <p class="hint" id="hstatus"></p>
+        <table id="htable">
+          <thead>
+            <tr>
+              <th>When (UTC)</th>
+              <th>Name</th>
+              <th>File</th>
+              <th>Type</th>
+              <th>Verdict</th>
+              <th>File SHA-256</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="view-library" class="hidden">
+      <div class="panel hidden" id="lnoadd">
+        Adding to the library is allowed only from the computer that runs the server (or with the library password,
+        if the server has one). You can still see what is in the library below.
+      </div>
+      <form id="lform" class="panel">
+        <h3 style="margin-top:0">Add an original to the library</h3>
+        <p class="hint" style="margin-top:0">The library is what "Authentic" is checked against. Add only genuine,
+          unedited
+          originals from the publisher, or your own recordings. Fields marked * are required.</p>
+        <div class="grid2">
+          <div>
+            <label for="lmedia">Media type <span class="req">*</span></label>
+            <select id="lmedia">
+              <option value="image">Image</option>
+              <option value="video">Video</option>
+            </select>
+            <p class="hint" id="lmediahint"></p>
+          </div>
+          <div>
+            <label for="lfile">File <span class="req">*</span></label>
+            <input type="file" id="lfile" required>
+          </div>
+          <div class="span2">
+            <label for="ltitle">Title <span class="req">*</span></label>
+            <input type="text" id="ltitle" maxlength="200" autocomplete="off"
+              placeholder="e.g. PM address to the nation, 15 Aug 2025">
+            <p class="hint">What this original is. The library id is made from it.</p>
+          </div>
+          <div>
+            <label for="lpub">Publisher / source <span class="req">*</span></label>
+            <input type="text" id="lpub" maxlength="200" autocomplete="off"
+              placeholder="e.g. Press Information Bureau, NASA, my own recording">
+            <p class="hint">Who published it, or who made it.</p>
+          </div>
+          <div>
+            <label for="llic">Licence / permission <span class="req">*</span></label>
+            <input type="text" id="llic" maxlength="200" autocomplete="off"
+              placeholder="e.g. public domain, CC BY 4.0, written permission">
+            <p class="hint">Why you may use it.</p>
+          </div>
+          <div class="span2">
+            <label for="lurl">Source URL (optional)</label>
+            <input type="text" id="lurl" maxlength="500" autocomplete="off" placeholder="https://…">
+            <p class="hint">Where anyone can check this is the real original.</p>
+          </div>
+          <div class="span2">
+            <label for="lnotes">Notes (optional)</label>
+            <textarea id="lnotes" maxlength="1000"
+              placeholder="Anything useful: date recorded, camera, which version this is…"></textarea>
+          </div>
+          <div>
+            <label for="luser">Added by</label>
+            <input type="text" id="luser" maxlength="64" autocomplete="off">
+          </div>
+          <div id="lkeybox" class="hidden">
+            <label for="lkey">Library password <span class="req">*</span></label>
+            <input type="password" id="lkey" autocomplete="off">
+          </div>
+        </div>
+        <label class="check"><input type="checkbox" id="lrights">
+          <span>I may use this file, and it is the genuine, unedited original from the publisher named
+            above.</span></label>
+        <button class="primary" id="ladd" type="submit">Add to library</button>
+        <p class="hint" id="lstatus" role="status"></p>
+      </form>
+      <div class="panel">
+        <h3 style="margin-top:0">In the library</h3>
+        <div id="llist"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const $ = (id) => document.getElementById(id);
+    function h(tag, attrs, ...kids) {
+      const e = document.createElement(tag);
+      for (const [k, v] of Object.entries(attrs || {})) {
+        if (k === "class") e.className = v;
+        else if (k === "onclick" && typeof v === "function") e.addEventListener("click", v);
+        else e.setAttribute(k, v);
+      }
+      for (const k of kids.flat(Infinity)) { if (k == null) continue; e.append(k.nodeType ? k : document.createTextNode(String(k))); }
+      return e;
+    }
+    async function api(url, opts) {
+      const r = await fetch(url, opts);
+      if (!r.ok) {
+        let m = r.statusText;
+        try { const d = (await r.json()).detail; m = Array.isArray(d) ? d.map(x => x.msg).join("; ") : (d || m); } catch (e) { }
+        throw new Error(m);
+      }
+      return r.json();
+    }
+
+    async function loadAccount() {
+      try {
+        const account = await api("/api/auth/me");
+        if (account && account.authenticated) {
+          $("account-name").textContent = "Signed in as " + account.username;
+          if ($("user")) $("user").value = account.username;
+          if ($("luser")) $("luser").value = account.username;
+          $("logout").style.display = "";
+          if ($("login-link")) $("login-link").style.display = "none";
+          return;
+        }
+      } catch (error) {
+        console.warn("Auth check failed:", error);
+      }
+      $("account-name").textContent = "Guest mode";
+      $("logout").style.display = "none";
+      if ($("login-link")) $("login-link").style.display = "";
+    }
+    $("logout").onclick = async () => {
+      try { await fetch("/api/auth/logout", { method: "POST" }); } catch (e) { }
+      window.location.href = "/";
+    };
+    loadAccount();
+
+    $("path2-model").onchange = () => {
+      if ($("path2-model").value === "Smaug") $("path2-mode").value = "Smaug";
+    };
+    $("path2-mode").onchange = () => {
+      if ($("path2-mode").value === "Smaug") $("path2-model").value = "Smaug";
+    };
+
+    // ---- tabs
+    function show(which) {
+      for (const t of ["check", "history", "library"]) {
+        $("view-" + t).classList.toggle("hidden", t !== which);
+        $("tab-" + t).setAttribute("aria-selected", String(t === which));
+      }
+      if (which === "history") loadHistory();
+      if (which === "library") loadLibrary();
+    }
+    $("tab-check").onclick = () => show("check");
+    $("tab-history").onclick = () => show("history");
+    $("tab-library").onclick = () => show("library");
+
+    // ---- health
+    function loadHealth() {
+      return api("/api/health").then(j => {
+        const l = j.library_trusted;
+        const cal = j.calibration || {};
+        const video = cal.video || {};
+        const videoText = video.calibrated
+          ? ` Video similarity is calibrated at ${video.threshold} for library comparison (n=${video.positive_samples} genuine variants, n=${video.negative_samples} negatives).`
+          : " Video similarity is not activated.";
+        $("health").textContent = `Library: ${l.image} image, ${l.video} video originals. Exact video identity is independent of similarity.${videoText}` +
+          (j.image_index_built ? "" : " The image index is not built yet: add an image on the Library tab.") +
+          (j.video_index_built ? "" : " The video index is not built yet: add a video on the Library tab.");
+      }).catch((err) => {
+        console.warn("Could not reach health check:", err);
+        $("health").textContent = "Server is starting up or offline. Re-checking…";
+        setTimeout(loadHealth, 3000);
+      });
+    }
+    loadHealth();
+    loadLibrary();
+
+    // ---- result card
+    function verdictClass(v) {
+      if (v === "path2_analysis") return "v-matched";
+      if (v === "path2_inconclusive") return "v-cant";
+      if (v === "path2_error") return "v-differs";
+      if (v === "authentic") return "v-authentic";
+      if (v === "video_matched_no_edit") return "v-matched";
+      if (v === "video_incomplete") return "v-cant";
+      if (v === "video_edited") return "v-differs";
+      if (v === "cant_verify") return "v-cant";
+      if (v === "not_authentic_partial") return "v-partial";
+      return "v-differs";
+    }
+    function renderCard(res) {
+      const c = res.card, out = h("div");
+      out.append(h("div", { class: "banner " + verdictClass(c.verdict) }, h("h2", {}, c.title), h("p", {}, c.summary)));
+      if (res.cache_hit || c.cached_result?.hit) {
+        out.append(h("div", { class: "note" }, "Cached result: this exact file was checked earlier. The previous analysis and artifacts were reused; a new history entry was saved for this user."));
+      }
+      for (const w of (c.warnings || [])) out.append(h("div", { class: "warn" }, w));
+      for (const n of (c.notes || [])) out.append(h("div", { class: "note" }, n));
+      const body = h("div", { class: "panel" });
+      if (c.change_explanation && c.change_explanation.has_changes) {
+        const ce = c.change_explanation;
+        const box = h("div", { class: "panel", style: "border-left: 4px solid var(--bad); background: var(--bad-bg); margin-bottom: 16px; padding: 14px 16px;" },
+          h("h3", { style: "margin:0 0 6px; color:var(--bad); font-size: 17px;" }, "🔍 What & Where Was Changed"),
+          h("p", { style: "font-size: 15px; font-weight: 500; margin: 0 0 10px; color: var(--ink);" }, ce.narrative),
+          h("div", { style: "display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px;" },
+            ...(ce.edit_types || []).map(t => h("span", { class: "pill s-differs", style: "padding: 3px 10px; font-size: 13px;" }, t))
+          )
+        );
+        if (ce.items && ce.items.length) {
+          box.append(
+            h("table", { style: "margin-top: 8px; background: var(--panel); border-radius: 6px;" },
+              h("thead", {}, h("tr", {}, h("th", {}, "Where"), h("th", {}, "What Changed"), h("th", {}, "Measurement / Evidence"))),
+              h("tbody", {}, ce.items.map(it => h("tr", {},
+                h("td", { style: "font-weight: 600;" }, it.where),
+                h("td", {}, it.what),
+                h("td", { class: "mono" }, it.details)
+              )))
+            )
+          );
+        }
+        body.append(box);
+      } else if (c.change_explanation && (c.verdict === "authentic" || c.verdict === "video_matched_no_edit")) {
+        const ce = c.change_explanation;
+        body.append(h("div", { class: "panel", style: "border-left: 4px solid var(--ok); background: var(--ok-bg); margin-bottom: 16px; padding: 12px 14px;" },
+          h("h3", { style: "margin:0 0 4px; color:var(--ok);" }, "✅ All Checks Verified Consistent"),
+          h("p", { style: "margin: 0; color: var(--ink);" }, ce.narrative)
+        ));
+      }
+      if (c.path2) {
+        const p = c.path2;
+        body.append(h("h3", {}, "Path 2 detector result"));
+        const metrics = p.metrics || {};
+        body.append(h("table", {},
+          h("thead", {}, h("tr", {}, h("th", {}, "Setting"), h("th", {}, "Result"))),
+          h("tbody", {},
+            h("tr", {}, h("td", {}, "Model / backend"), h("td", { class: "mono" }, p.model || "Unknown")),
+            h("tr", {}, h("td", {}, "Analysis mode"), h("td", {}, p.mode || "Off")),
+            h("tr", {}, h("td", {}, "Calibration status"), h("td", {}, p.explanation?.calibration_status === "uncalibrated" ? "Experimental — uncalibrated, no activation threshold" : "Uncalibrated")),
+            h("tr", {}, h("td", {}, "Status"), h("td", {}, metrics.status || p.status || "Analyzed")),
+            h("tr", {}, h("td", {}, "Frames / faces"), h("td", {}, `${metrics.num_frames ?? "—"} / ${metrics.num_faces ?? "—"}`)),
+            h("tr", {}, h("td", {}, "Average face fake score"), h("td", {}, metrics.avg_p_fake == null ? "Not produced" : String(metrics.avg_p_fake))),
+            h("tr", {}, h("td", {}, "Average complete-frame score"), h("td", {}, metrics.avg_p_ai == null ? "Not produced" : String(metrics.avg_p_ai)))
+          )
+        ));
+        if (p.artifact) {
+          const ext = (p.artifact.split(".").pop() || "").toLowerCase();
+          const src = `/api/case/${res.case_id}/file/${encodeURIComponent(p.artifact)}`;
+          if (["jpg", "jpeg", "png", "webp", "bmp"].includes(ext)) {
+            body.append(h("h3", {}, "Annotated result"), h("img", { class: "cmp", src: src, alt: "Path 2 annotated result" }));
+          } else {
+            body.append(h("h3", {}, "Annotated result"),
+              h("video", { controls: true, style: "width:100%;max-height:520px;border-radius:8px" }, h("source", { src: src })));
+          }
+        }
+        if (p.explanation) {
+          const e = p.explanation;
+          body.append(h("h3", {}, "Why the model produced this evidence"));
+          body.append(h("div", { class: "note" }, `${e.headline || ""}. ${e.summary || ""}`));
+          if (e.generative_report?.narrative) {
+            body.append(h("h3", {}, "Generated evidence report"),
+              h("div", { class: "panel" }, e.generative_report.narrative),
+              h("p", { class: "hint" }, `Generated locally by ${e.generative_report.model}; wording is limited to measured evidence.`));
+          }
+          if (Array.isArray(e.observations) && e.observations.length) {
+            body.append(h("ul", {}, ...e.observations.map(v => h("li", {}, v))));
+          }
+          if (Array.isArray(e.limitations) && e.limitations.length) {
+            body.append(h("h4", {}, "Interpretation limits"));
+            body.append(h("ul", {}, ...e.limitations.map(v => h("li", {}, v))));
+          }
+        }
+        body.append(h("div", { class: "warn" }, "Path 2 scores are model outputs, not an authenticity claim or a substitute for the trusted-library comparison."));
+      }
+      if (c.path2_error) {
+        body.append(h("div", { class: "banner v-differs" }, h("h2", {}, "Path 2 could not complete"),
+          h("p", {}, c.path2_error)));
+      }
+      if ((c.reasons || []).length) body.append(h("h3", {}, "Why"), h("ul", {}, c.reasons.map(r => h("li", {}, r))));
+      if ((c.channels || []).length) {
+        body.append(h("h3", {}, "Checks against the original" + (c.source ? ` (${c.source})` : "")),
+          h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Check"), h("th", {}, "Result"), h("th", {}, "Detail"))),
+            h("tbody", {}, c.channels.map(x => h("tr", {}, h("td", {}, x.channel),
+              h("td", {}, h("span", { class: "pill s-" + x.state }, x.state.replace("_", " "))), h("td", {}, x.detail))))));
+      }
+      if (c.images && c.images.comparison) {
+        body.append(h("h3", {}, "Upload beside the original (red boxes = blocks outside the genuine range)"),
+          h("img", { class: "cmp", src: `/api/case/${res.case_id}/file/${c.images.comparison}`, alt: "upload beside the aligned original" }));
+      }
+      if (c.images && c.images.video_timeline) {
+        body.append(
+          h("h3", {}, "Video frame timeline"),
+          h("p", { class: "hint" }, "Representative aligned frames. Each row shows the upload time beside its matched trusted-source time. This visual match alone does not prove authenticity."),
+          h("img", {
+            class: "video-timeline", src: `/api/case/${res.case_id}/file/${c.images.video_timeline}`,
+            alt: "Representative video frames with upload and trusted source timestamps, shown side by side"
+          })
+        );
+      }
+      if (c.transcript_diff) {
+        const td = c.transcript_diff;
+        const tBox = h("div", { class: "transcript-box" },
+          h("h3", { style: "margin-top:0" }, "Speech & Transcript Comparison"),
+          h("div", {}, h("strong", {}, "Original Source Speech:"), h("div", { class: "transcript-quote" }, `“${td.source_transcript || "(none)"}”`)),
+          h("div", {}, h("strong", {}, "Uploaded Video Speech:"), h("div", { class: "transcript-quote" }, `“${td.upload_transcript || "(none)"}”`)),
+          h("div", { style: "margin: 8px 0; font-size: 13.5px;" },
+            h("span", { class: "pill " + (td.word_error_rate > 0.05 ? "s-differs" : "s-agrees"), style: "margin-right: 8px;" }, `Word Error Rate (WER): ${td.word_error_rate}`),
+            h("span", { class: "pill " + (td.audio_correlation < 0.85 ? "s-differs" : "s-agrees") }, `Acoustic Correlation: ${td.audio_correlation}`)
+          )
+        );
+        if (td.differences && td.differences.length) {
+          tBox.append(
+            h("table", { style: "margin-top: 10px;" },
+              h("thead", {}, h("tr", {}, h("th", {}, "Type"), h("th", {}, "Original Speech"), h("th", {}, "Uploaded Speech"))),
+              h("tbody", {}, td.differences.map(d => h("tr", {},
+                h("td", {}, h("span", { class: "diff-tag-" + d.type }, d.type)),
+                h("td", { class: "mono" }, d.original || "—"),
+                h("td", { class: "mono" }, d.upload || "—")
+              )))
+            )
+          );
+        }
+        body.append(tBox);
+      }
+      if (c.sync_diff) {
+        const sd = c.sync_diff;
+        body.append(
+          h("h3", {}, "Lip-Sync & Facial Motion Analysis"),
+          h("div", { class: "sync-grid" },
+            h("div", { class: "sync-card" },
+              h("div", { class: "lbl" }, "Mouth Sharpness Dev"),
+              h("div", { class: "val" }, `${sd.mouth_sharpness_dev}`),
+              h("div", { class: "hint" }, sd.mouth_sharpness_dev > 0.35 ? "Altered / Blurry" : "Normal")
+            ),
+            h("div", { class: "sync-card" },
+              h("div", { class: "lbl" }, "Mouth Motion Diff"),
+              h("div", { class: "val" }, `${sd.mouth_motion_diff}`),
+              h("div", { class: "hint" }, sd.mouth_motion_diff > 25.0 ? "Altered movement" : "Consistent")
+            ),
+            h("div", { class: "sync-card" },
+              h("div", { class: "lbl" }, "AV Sync Correlation"),
+              h("div", { class: "val" }, `${sd.av_sync_correlation}`),
+              h("div", { class: "hint" }, sd.av_sync_correlation < 0.55 ? "De-synchronized" : "Synchronized")
+            )
+          )
+        );
+      }
+      const used = (c.evidence || []).filter(e => e && e.counted);
+      if (used.length) {
+        body.append(h("h3", {}, "Evidence that counted"),
+          h("table", {}, h("thead", {}, h("tr", {}, h("th", {}, "Measured"), h("th", {}, "Value"), h("th", {}, "Genuine range"), h("th", {}, "Upload time"), h("th", {}, "Outside?"))),
+            h("tbody", {}, used.map(e => h("tr", {}, h("td", {}, `${e.module}.${e.metric}`), h("td", { class: "mono" }, `${e.value} ${e.unit}`),
+              h("td", { class: "mono" }, JSON.stringify(e.genuine_range) + (e.calibrated ? "" : " (not calibrated)")),
+              h("td", { class: "mono" }, (e.timestamps || []).map(([start, end]) => `${start.toFixed(3)}–${end.toFixed(3)}s`).join(", ") || "whole file"),
+              h("td", {}, e.outside ? "yes" : "no"))))));
+      }
+      if ((c.segments || []).length) body.append(h("h3", {}, "Segments"), h("ul", {}, c.segments.map(s => h("li", {}, `${s.status}: ${JSON.stringify(s.ranges)} ${s.note || ""}`))));
+      body.append(h("div", { class: "foot" },
+        h("div", {}, `File: ${c.input?.filename ?? "upload"} (${c.input?.door ?? "media"})`),
+        h("div", { class: "mono" }, "SHA-256: " + (c.input?.sha256 ?? "—")),
+        h("div", { class: "mono" }, "Card hash: " + (c.card_sha256 ?? "—")),
+        h("div", {}, `Case ${res.case_id} · engine ${c.engine_version} · saved to history as row ${res.history?.id ?? "—"} at ${res.history?.submitted_at ?? ""}`),
+        h("div", {}, (c.summary_hi || "") + (c.summary_hi ? "  (draft Hindi, needs review)" : "")),
+        h("div", {}, h("a", { href: `/api/case/${res.case_id}/file/card.md`, target: "_blank" }, "card.md"), " · ",
+          h("a", { href: `/api/case/${res.case_id}/file/verdict.json`, target: "_blank" }, "verdict.json"))));
+      out.append(body);
+      return out;
+    }
+    $("form").onsubmit = async (ev) => {
+      ev.preventDefault();
+      const f = $("file").files[0]; if (!f) return;
+      const fd = new FormData(); fd.append("file", f); fd.append("user_id", $("user").value || "anonymous");
+      fd.append("path2_model", $("path2-model").value);
+      fd.append("path2_mode", $("path2-mode").value);
+      $("go").disabled = true; $("go").textContent = "Checking…"; $("result").replaceChildren();
+      try { $("result").replaceChildren(renderCard(await api("/api/analyze", { method: "POST", body: fd }))); }
+      catch (e) { $("result").replaceChildren(h("div", { class: "panel err" }, "Error: " + e.message)); }
+      finally { $("go").disabled = false; $("go").textContent = "Check"; }
+    };
+
+    // ---- library
+    const DOOR_NAMES = { image: "Images", video: "Videos" };
+    let libInfo = null;
+    function doorOf(filename) {
+      const m = /\.[^.]+$/.exec(filename.toLowerCase()); if (!m || !libInfo) return null;
+      return Object.keys(libInfo.accept).find(d => libInfo.accept[d].includes(m[0])) || null;
+    }
+    function setAccept() {
+      const d = $("lmedia").value;
+      if (libInfo) $("lfile").setAttribute("accept", libInfo.accept[d].join(","));
+      $("lmediahint").textContent = libInfo
+        ? (libInfo.searchable[d] ? (d === "video"
+          ? "Exact byte copies can be verified; non-exact video matching is disabled until calibrated."
+          : "Can be checked against right away.")
+          : "Stored in its own folder, but cannot be checked yet: Gate 1 for " + d + " is not built.")
+        : "";
+    }
+    $("lmedia").onchange = setAccept;
+    $("lfile").onchange = () => {
+      const f = $("lfile").files[0]; if (!f) return;
+      const d = doorOf(f.name);
+      if (d && d !== $("lmedia").value) { $("lmedia").value = d; setAccept(); }          // follow the file, so they cannot disagree
+      if (!$("ltitle").value.trim()) $("ltitle").value = f.name.replace(/\.[^.]+$/, "").replace(/[_-]+/g, " ");
+    };
+    function linkOrText(url) {
+      return /^https?:\/\//i.test(url) ? h("a", { href: url, target: "_blank", rel: "noopener noreferrer" }, url) : (url || "");
+    }
+    function renderLibrary() {
+      const box = $("llist"); box.replaceChildren();
+      if (!libInfo || !libInfo.items) {
+        box.append(h("p", { class: "hint" }, "Loading library…"));
+        return;
+      }
+      if (libInfo.registry) {
+        box.append(h("p", { class: "hint" }, `${libInfo.registry.count} library record(s) synchronized in SQLite; original media remains on disk.`));
+      }
+      for (const d of ["image", "video"]) {
+        const items = (libInfo.items && libInfo.items[d]) || [];
+        const searchable = libInfo.searchable && libInfo.searchable[d];
+        const note = d === "video" && searchable
+          ? " · exact identity plus calibrated similarity"
+          : (searchable ? "" : " · stored, not checkable yet");
+        box.append(h("h3", {}, `${DOOR_NAMES[d] || d} (${items.length})${note}`));
+        if (!items.length) { box.append(h("p", { class: "hint" }, "Nothing here yet.")); continue; }
+        box.append(h("table", {}, h("thead", {}, h("tr", {}, ["Title", "Id", "Publisher", "Licence", "Source", "Added (UTC)", "By"].map(t => h("th", {}, t)))),
+          h("tbody", {}, items.map(m => h("tr", {}, h("td", {}, m.title || ""), h("td", { class: "mono" }, m.source_id || ""), h("td", {}, m.publisher || ""),
+            h("td", {}, m.license || ""), h("td", {}, linkOrText(m.url)), h("td", { class: "mono" }, m.added_at || ""), h("td", {}, m.added_by || ""))))));
+      }
+    }
+    async function loadLibrary() {
+      try { libInfo = await api("/api/library"); }
+      catch (e) { $("llist").replaceChildren(h("p", { class: "err" }, "Could not load the library: " + e.message)); return; }
+      setAccept();
+      $("lnoadd").classList.toggle("hidden", !!libInfo.can_add);
+      $("lform").classList.toggle("hidden", !libInfo.can_add);
+      $("lkeybox").classList.toggle("hidden", !libInfo.admin_key_required);
+      $("lkey").required = !!libInfo.admin_key_required;
+      if (!$("luser").value) $("luser").value = $("user").value || "guest";
+      renderLibrary();
+    }
+    $("lform").onsubmit = async (ev) => {
+      ev.preventDefault();
+      const f = $("lfile").files[0]; if (!f) return;
+      const fd = new FormData();
+      fd.append("file", f); fd.append("media", $("lmedia").value);
+      fd.append("title", $("ltitle").value); fd.append("publisher", $("lpub").value); fd.append("license", $("llic").value);
+      fd.append("url", $("lurl").value); fd.append("notes", $("lnotes").value); fd.append("user_id", $("luser").value || "anonymous");
+      fd.append("rights_confirmed", $("lrights").checked ? "true" : "false"); fd.append("admin_key", $("lkey").value);
+      $("ladd").disabled = true; $("ladd").textContent = "Adding…"; $("lstatus").className = "hint"; $("lstatus").textContent = "";
+      try {
+        const j = await api("/api/library/add", { method: "POST", body: fd });
+        $("lstatus").className = "hint okmsg"; $("lstatus").textContent = j.message;
+        for (const id of ["lfile", "ltitle", "lurl", "lnotes"]) $(id).value = "";        // keep publisher / licence for the next one
+        $("lrights").checked = false;
+        await loadLibrary(); loadHealth();
+      } catch (e) { $("lstatus").className = "hint err"; $("lstatus").textContent = "Not added: " + e.message; }
+      finally { $("ladd").disabled = false; $("ladd").textContent = "Add to library"; }
+    };
+
+    // ---- history
+    async function loadHistory() {
+      $("hstatus").className = "hint";
+      const u = $("huser").value.trim();
+      try {
+        const j = await api("/api/history?limit=100" + (u ? "&user_id=" + encodeURIComponent(u) : ""));
+        const tb = $("htable").querySelector("tbody"); tb.replaceChildren();
+        for (const r of (j.rows || [])) {
+          tb.append(h("tr", {}, h("td", { class: "mono" }, r.submitted_at), h("td", {}, r.user_id), h("td", {}, r.filename), h("td", {}, r.door),
+            h("td", {}, r.label + (r.stub_used ? " (stub)" : "")), h("td", { class: "mono" }, (r.sha256 || "").slice(0, 12) + "…"),
+            h("td", {},
+              h("a", { href: `/api/case/${r.case_id}/file/card.md`, target: "_blank" }, "card"),
+              " · ",
+              h("button", { class: "ghost danger", type: "button", onclick: () => deleteHistoryRow(r.id, r.filename) }, "Delete & recheck"))));
+        }
+        $("hstatus").textContent = (j.rows && j.rows.length) ? `${j.rows.length} row(s), newest first.` : "No submissions yet.";
+      } catch (e) {
+        $("hstatus").textContent = "Could not load history: " + e.message;
+      }
+    }
+    $("hrefresh").onclick = loadHistory;
+    $("hverify").onclick = async () => {
+      const v = await api("/api/history/verify");
+      $("hstatus").textContent = v.ok ? `Chain verified: ${v.rows} row(s), none altered.` : `CHAIN BROKEN at row ${v.first_bad_id}.`;
+    };
+    $("hforget").onclick = async () => {
+      const u = $("huser").value.trim(); if (!u) { $("hstatus").textContent = "Type the name to forget first."; return; }
+      if (!confirm(`Blank the name and file names of every row from "${u}"? The chain still verifies.`)) return;
+      const fd = new FormData(); fd.append("user_id", u);
+      const j = await api("/api/forget", { method: "POST", body: fd });
+      $("hstatus").textContent = `Blanked ${j.blanked_rows} row(s).`; loadHistory();
+    };
+
+    async function deleteHistoryRow(rowId, filename) {
+      if (!confirm(`Delete history row "${filename}" and clear its cached result? The same file will run again when uploaded.`)) return;
+      $("hstatus").textContent = "Deleting history row and cache…";
+      try {
+        const j = await api(`/api/history/${rowId}/delete`, { method: "POST" });
+        $("hstatus").textContent = `Deleted 1 history row and ${j.deleted_cache_rows} cache entry(s). The file can now be rechecked.`;
+        await loadHistory();
+      } catch (error) {
+        $("hstatus").className = "hint err";
+        $("hstatus").textContent = `Could not delete history row: ${error.message}`;
+        setTimeout(() => $("hstatus").className = "hint", 3000);
+      }
+    }
+  </script>
+</body>
+
+</html>

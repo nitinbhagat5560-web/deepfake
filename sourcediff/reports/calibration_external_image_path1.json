@@ -1,0 +1,149 @@
+{
+  "generated_at": "2026-11-01T14:52:15+00:00",
+  "dataset": "F:\\image_calibration",
+  "source_pairs": 39,
+  "reuploads": 78,
+  "paired_edits": 20,
+  "gate": {
+    "positive_n": 78,
+    "positive_min": 0.9994708299636841,
+    "negative_n": 59,
+    "negative_max": 0.8226495981216431,
+    "threshold": 0.9111
+  },
+  "range": {
+    "block_diff_max": 1.6476449966430664,
+    "detail_dev_max": 2.1835633148335276,
+    "block_chroma_diff_max": 2.506028175354004
+  },
+  "range_calibration_samples": 58,
+  "heldout_test": {
+    "genuine_compared": 20,
+    "genuine_flagged": 0,
+    "edits_compared": 20,
+    "edits_caught": 20,
+    "edits_missed": 0
+  },
+  "measured_edits": [
+    {
+      "path": "F:\\image_calibration\\edits\\. Background Replacement  Edits\\Tp_D_NRN_M_N_cha10170_nat10123_12291.jpg",
+      "block_diff_max": 112.54866790771484,
+      "detail_dev_max": 4.188874777231145,
+      "block_chroma_diff_max": 38.674434661865234
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\. Background Replacement  Edits\\Tp_D_NRN_M_N_cha10170_nat10169_12292.jpg",
+      "block_diff_max": 117.94928741455078,
+      "detail_dev_max": 5.061679400738219,
+      "block_chroma_diff_max": 16.85996437072754
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\. Background Replacement  Edits\\Tp_D_NRN_S_N_cha00085_ind00098_10851.jpg",
+      "block_diff_max": 25.900434494018555,
+      "detail_dev_max": 3.73746115331844,
+      "block_chroma_diff_max": 44.66227722167969
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Face Replacement  Face Edits\\Tp_D_CRN_S_N_cha10150_cha00040_12221.jpg",
+      "block_diff_max": 47.690765380859375,
+      "detail_dev_max": 1.9834058895370985,
+      "block_chroma_diff_max": 14.528918266296387
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Face Replacement  Face Edits\\Tp_D_NRD_S_N_cha10107_cha10106_11119.jpg",
+      "block_diff_max": 55.923831939697266,
+      "detail_dev_max": 2.95897854358938,
+      "block_chroma_diff_max": 24.766908645629883
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Face Replacement  Face Edits\\Tp_D_NRN_S_N_cha00016_cha00014_11153.jpg",
+      "block_diff_max": 6.024330139160156,
+      "detail_dev_max": 0.4039604934411326,
+      "block_chroma_diff_max": 3.0600903034210205
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_CRN_M_N_cha00050_cha00026_11787.jpg",
+      "block_diff_max": 137.5048065185547,
+      "detail_dev_max": 4.163273270502269,
+      "block_chroma_diff_max": 21.57647132873535
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_CRN_M_N_cha00060_cha00040_11678.jpg",
+      "block_diff_max": 105.91300201416016,
+      "detail_dev_max": 1.8052892064990151,
+      "block_chroma_diff_max": 48.660823822021484
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_CRN_M_N_cha00062_cha00040_11020.jpg",
+      "block_diff_max": 65.34518432617188,
+      "detail_dev_max": 5.587851059010092,
+      "block_chroma_diff_max": 35.444366455078125
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_CRN_M_N_cha10108_cha00027_11666.jpg",
+      "block_diff_max": 38.16554641723633,
+      "detail_dev_max": 1.1476744408021642,
+      "block_chroma_diff_max": 15.084800720214844
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_NNN_S_N_txt00042_txt00041_10827.jpg",
+      "block_diff_max": 83.77336883544922,
+      "detail_dev_max": 0.9222528198959413,
+      "block_chroma_diff_max": 24.911157608032227
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_NRD_S_N_cha10107_ind10101_11187.jpg",
+      "block_diff_max": 41.98095703125,
+      "detail_dev_max": 4.324316792819635,
+      "block_chroma_diff_max": 0.849373996257782
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_NRN_S_N_cha00054_cha00086_11719.jpg",
+      "block_diff_max": 35.054595947265625,
+      "detail_dev_max": 2.1760766532383675,
+      "block_chroma_diff_max": 12.493194580078125
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_D_NRN_S_N_cha10128_nat10114_12180.jpg",
+      "block_diff_max": 8.455402374267578,
+      "detail_dev_max": 4.006633440745008,
+      "block_chroma_diff_max": 10.38232421875
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_CNN_S_N_cha00053_cha00053_11721.jpg",
+      "block_diff_max": 8.753375053405762,
+      "detail_dev_max": 0.15632501336211896,
+      "block_chroma_diff_max": 0.6898178458213806
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_CRN_S_N_cha00053_cha00053_11720.jpg",
+      "block_diff_max": 2.6235406398773193,
+      "detail_dev_max": 0.29708635569194625,
+      "block_chroma_diff_max": 1.4285215139389038
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_CRN_S_N_cha10163_cha10163_12248.jpg",
+      "block_diff_max": 23.134897232055664,
+      "detail_dev_max": 0.8684053454811793,
+      "block_chroma_diff_max": 14.727783203125
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_CRN_S_N_cha10190_cha10190_12326.jpg",
+      "block_diff_max": 11.568416595458984,
+      "detail_dev_max": 0.33489658898032715,
+      "block_chroma_diff_max": 20.21967124938965
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_CRN_S_N_cha10190_cha10190_12327.jpg",
+      "block_diff_max": 16.710243225097656,
+      "detail_dev_max": 0.2305441120266055,
+      "block_chroma_diff_max": 3.590635299682617
+    },
+    {
+      "path": "F:\\image_calibration\\edits\\Object  Text Insertion, Removal, or Copy-Paste\\Tp_S_NNN_S_N_cha10190_cha10190_12430.jpg",
+      "block_diff_max": 8.628205299377441,
+      "detail_dev_max": 0.5879573358185708,
+      "block_chroma_diff_max": 0.5299251675605774
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in - SourceDiff</title>
+  <style>
+    :root { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: #172033; background: #eef3f9; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; }
+    main { width: min(420px, calc(100% - 32px)); background: white; border: 1px solid #d8e0ea; border-radius: 14px; padding: 28px; box-shadow: 0 16px 44px rgba(32, 55, 90, .12); }
+    h1 { margin: 0; font-size: 26px; }
+    .sub { margin: 6px 0 22px; color: #627187; }
+    label { display: block; margin: 14px 0 5px; font-weight: 650; }
+    input { width: 100%; padding: 11px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font: inherit; }
+    button { width: 100%; margin-top: 18px; padding: 11px; border: 0; border-radius: 8px; background: #2457d6; color: white; font: inherit; font-weight: 700; cursor: pointer; }
+    button.secondary { background: transparent; color: #2457d6; margin-top: 8px; }
+    .message { min-height: 22px; margin-top: 12px; color: #b42318; font-size: 14px; }
+    .mode { margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SourceDiff</h1>
+    <p class="sub" id="subtitle">Sign in to check media and view history.</p>
+    <form id="login-form">
+      <label for="username">Username</label>
+      <input id="username" minlength="3" maxlength="64" autocomplete="username" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" minlength="8" maxlength="128" autocomplete="current-password" required>
+      <button id="submit" type="submit">Sign in</button>
+    </form>
+    <button class="secondary" id="switch" type="button">Create an account</button>
+    <button class="secondary" id="guest-btn" type="button" style="margin-top:4px;color:#5b6573;font-weight:600;">Continue as Guest</button>
+    <div class="message" id="message" role="status"></div>
+  </main>
+<script>
+let register = false;
+const form = document.getElementById("login-form");
+document.getElementById("switch").onclick = () => {
+  register = !register;
+  document.getElementById("submit").textContent = register ? "Create account" : "Sign in";
+  document.getElementById("switch").textContent = register ? "Already have an account? Sign in" : "Create an account";
+  document.getElementById("subtitle").textContent = register
+    ? "Create a local SourceDiff account."
+    : "Sign in to check media and view history.";
+  document.getElementById("password").autocomplete = register ? "new-password" : "current-password";
+  document.getElementById("message").textContent = "";
+};
+document.getElementById("guest-btn").onclick = async () => {
+  try {
+    await fetch("/api/auth/guest", { method: "POST" });
+    window.location.href = "/";
+  } catch (e) {
+    window.location.reload();
+  }
+};
+form.onsubmit = async (event) => {
+  event.preventDefault();
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value;
+  const body = new URLSearchParams({ username, password });
+  document.getElementById("submit").disabled = true;
+  document.getElementById("message").textContent = "";
+  try {
+    const response = await fetch(register ? "/api/auth/register" : "/api/auth/login", {
+      method: "POST", headers: {"Content-Type": "application/x-www-form-urlencoded"}, body
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || "Could not continue");
+    window.location.href = "/";
+  } catch (error) {
+    document.getElementById("message").textContent = error.message;
+  } finally {
+    document.getElementById("submit").disabled = false;
+  }
+};
+</script>
+</body>
+</html>

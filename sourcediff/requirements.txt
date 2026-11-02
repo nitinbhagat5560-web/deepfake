@@ -1,0 +1,13 @@
+# SourceDiff Path 1 starter. Python 3.10 or newer.
+numpy
+opencv-python-headless>=4.8
+scikit-image          # only used for the demo sample pictures and calibration
+faiss-cpu
+fastapi
+uvicorn
+python-multipart      # FastAPI needs this for file uploads
+httpx2                # Starlette's test client now requires this compatible package
+pytest
+PyMySQL>=1.1
+faster-whisper        # local speech transcription for audio inside videos
+# Also needed for video/audio files (not for images): ffmpeg / ffprobe on your PATH.

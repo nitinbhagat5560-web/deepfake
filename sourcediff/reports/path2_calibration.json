@@ -1,0 +1,21 @@
+{
+  "generated_at": "2026-11-02T14:32:53+00:00",
+  "model": "yermandy/GenD_PE_L",
+  "device": "cuda",
+  "samples": 32,
+  "real_samples": 12,
+  "fake_samples": 20,
+  "method": "Threshold selected by development-set accuracy/Youden index; held-out rows retained by dataset/stable index.",
+  "face_score": {
+    "threshold_fake_if_greater_equal": 0.91604083776474,
+    "development_accuracy": 0.8709677419354839,
+    "auc": 0.8863636363636364,
+    "n": 31
+  },
+  "whole_frame_score": {
+    "threshold_fake_if_greater_equal": 0.9667552709579468,
+    "development_accuracy": 0.84375,
+    "auc": 0.9208333333333333,
+    "n": 32
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "rehearsal": true,
+  "opencv": "5.0.0",
+  "margin": 1.0,
+  "holdout": [
+    "astronaut",
+    "coffee",
+    "retina",
+    "clock",
+    "coins"
+  ],
+  "gate": {
+    "pos_n": 160,
+    "pos_min": 0.9958851337432861,
+    "neg_n": 63,
+    "neg_max": 0.5357354283332825,
+    "threshold": 0.7658
+  },
+  "range": {
+    "n": 160,
+    "max_seen": {
+      "block_diff_max": 2.6259236335754395,
+      "detail_dev_max": 2.9384574075862004,
+      "block_chroma_diff_max": 2.813494920730591
+    },
+    "upper_edge": {
+      "block_diff_max": 2.6259236335754395,
+      "detail_dev_max": 2.9384574075862004,
+      "block_chroma_diff_max": 2.813494920730591
+    }
+  },
+  "heldout": {
+    "genuine_n": 100,
+    "genuine_compared": 77,
+    "genuine_flagged": 0,
+    "edits_n": 150,
+    "edits_caught": 109,
+    "edits_stopped_early": 33,
+    "edits_passed_as_authentic": 8,
+    "by_kind": {
+      "blur100": {
+        "caught": 6,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 2,
+        "n": 10
+      },
+      "blur150": {
+        "caught": 7,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 1,
+        "n": 10
+      },
+      "blur60": {
+        "caught": 6,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 2,
+        "n": 10
+      },
+      "copymove100": {
+        "caught": 8,
+        "no_match": 1,
+        "not_compared": 1,
+        "passed": 0,
+        "n": 10
+      },
+      "copymove60": {
+        "caught": 7,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 1,
+        "n": 10
+      },
+      "inpaint100": {
+        "caught": 8,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 0,
+        "n": 10
+      },
+      "inpaint60": {
+        "caught": 7,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 1,
+        "n": 10
+      },
+      "patch130": {
+        "caught": 7,
+        "no_match": 2,
+        "not_compared": 1,
+        "passed": 0,
+        "n": 10
+      },
+      "patch190": {
+        "caught": 6,
+        "no_match": 4,
+        "not_compared": 0,
+        "passed": 0,
+        "n": 10
+      },
+      "patch40": {
+        "caught": 8,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 0,
+        "n": 10
+      },
+      "patch80": {
+        "caught": 8,
+        "no_match": 1,
+        "not_compared": 1,
+        "passed": 0,
+        "n": 10
+      },
+      "recolour100": {
+        "caught": 8,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 0,
+        "n": 10
+      },
+      "recolour150": {
+        "caught": 8,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 0,
+        "n": 10
+      },
+      "recolour60": {
+        "caught": 8,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 0,
+        "n": 10
+      },
+      "text": {
+        "caught": 7,
+        "no_match": 0,
+        "not_compared": 2,
+        "passed": 1,
+        "n": 10
+      }
+    },
+    "margin_table": {
+      "1.0": {
+        "genuine_flagged": 0,
+        "genuine_compared": 77,
+        "edits_passed": 8,
+        "edits_n": 150
+      },
+      "1.25": {
+        "genuine_flagged": 0,
+        "genuine_compared": 77,
+        "edits_passed": 9,
+        "edits_n": 150
+      },
+      "1.5": {
+        "genuine_flagged": 0,
+        "genuine_compared": 77,
+        "edits_passed": 9,
+        "edits_n": 150
+      },
+      "2.0": {
+        "genuine_flagged": 0,
+        "genuine_compared": 77,
+        "edits_passed": 13,
+        "edits_n": 150
+      }
+    }
+  }
+}

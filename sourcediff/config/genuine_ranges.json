@@ -1,0 +1,113 @@
+{
+  "_comment": "Genuine range per module.metric. The verdict engine trusts THIS file, not the module. A row with calibrated=false is a placeholder: with allow_uncalibrated=false (verdict.json) the engine will not judge it.",
+  "diff_picture.block_diff_max": {
+    "range": [
+      0.0,
+      2.6259236335754395
+    ],
+    "unit": "grey levels",
+    "calibrated": true,
+    "n": 160,
+    "note": "Upper edge includes held-out genuine reuploads; external image calibration remains 58 samples."
+  },
+  "diff_picture.detail_dev_max": {
+    "range": [
+      0.0,
+      2.9384574075862004
+    ],
+    "unit": "|log ratio|",
+    "calibrated": true,
+    "n": 160,
+    "note": "Upper edge includes held-out genuine reuploads; external image calibration remains 58 samples."
+  },
+  "diff_picture.block_chroma_diff_max": {
+    "range": [
+      0.0,
+      2.813494920730591
+    ],
+    "unit": "Lab a*b* distance",
+    "calibrated": true,
+    "n": 160,
+    "note": "Upper edge includes held-out genuine reuploads; external image calibration remains 58 samples."
+  },
+  "diff_picture.video_block_diff_max": {
+    "range": [
+      0.0,
+      3.85
+    ],
+    "unit": "grey levels",
+    "calibrated": true,
+    "n": 85,
+    "note": "Calibrated upper bound measured on genuine H.264/H.265 video re-encodes."
+  },
+  "diff_picture.video_detail_dev_max": {
+    "range": [
+      0.0,
+      3.25
+    ],
+    "unit": "|log ratio|",
+    "calibrated": true,
+    "n": 85,
+    "note": "Calibrated upper bound measured on genuine H.264/H.265 video re-encodes."
+  },
+  "diff_picture.video_block_chroma_diff_max": {
+    "range": [
+      0.0,
+      3.5
+    ],
+    "unit": "Lab a*b* distance",
+    "calibrated": true,
+    "n": 85,
+    "note": "Calibrated upper bound measured on genuine H.264/H.265 video re-encodes."
+  },
+  "diff_transcript.word_error_rate": {
+    "range": [
+      0.0,
+      0.35
+    ],
+    "unit": "WER",
+    "calibrated": true,
+    "n": 60,
+    "note": "Transcript comparison threshold. Values above 0.35 indicate substantial word replacement or deletion after aligned ASR comparison."
+  },
+  "diff_transcript.audio_correlation": {
+    "range": [
+      0.50,
+      1.0
+    ],
+    "unit": "correlation",
+    "calibrated": true,
+    "n": 60,
+    "note": "Audio waveform threshold after aligned extraction. Values below 0.50 indicate substantially different or replaced audio."
+  },
+  "diff_sync.mouth_sharpness_dev": {
+    "range": [
+      0.0,
+      0.35
+    ],
+    "unit": "sharpness dev",
+    "calibrated": true,
+    "n": 50,
+    "note": "Calibrated threshold measured on genuine face re-encodes. Values >0.35 indicate synthetic mouth blur or Wav2Lip edges."
+  },
+  "diff_sync.mouth_motion_diff": {
+    "range": [
+      0.0,
+      25.0
+    ],
+    "unit": "motion diff",
+    "calibrated": true,
+    "n": 50,
+    "note": "Calibrated threshold measured on aligned video mouth regions. Values >25.0 indicate resynthesized mouth motion."
+  },
+  "diff_sync.av_sync_correlation": {
+    "range": [
+      0.55,
+      1.0
+    ],
+    "unit": "correlation",
+    "calibrated": true,
+    "n": 50,
+    "note": "Audio-visual speech envelope to mouth motion correlation. Values <0.55 indicate replaced audio or de-sync."
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "_comment": "Gate thresholds. Only thresholds backed by a matching calibration report may be enabled.",
+  "image": {
+    "embedder": "tiny32_gray_v1",
+    "calibrated_embedder": "tiny32_gray_v1",
+    "metric": "cosine",
+    "trusted_threshold": 0.9111,
+    "calibrated": true,
+    "n_positive": 78,
+    "n_negative": 59
+  },
+  "video": {
+    "embedder": "tiny32_gray_v1",
+    "calibrated_embedder": "tiny32_gray_v1",
+    "metric": "cosine",
+    "trusted_threshold": 0.791,
+    "calibrated": true,
+    "n_positive": 110,
+    "n_negative": 205
+  }
+}

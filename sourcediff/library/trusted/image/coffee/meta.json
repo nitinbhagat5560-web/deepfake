@@ -1,0 +1,10 @@
+{
+  "source_id": "coffee",
+  "title": "coffee (scikit-image sample photo)",
+  "publisher": "scikit-image sample data",
+  "url": "",
+  "license": "rehearsal only; check scikit-image data licences before any public use",
+  "file": "original.png",
+  "door": "image",
+  "added_at": "2026-10-19T02:36:43+00:00"
+}

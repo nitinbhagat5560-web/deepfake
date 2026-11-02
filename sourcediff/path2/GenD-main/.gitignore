@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.ruff_cache/
+.venv*/
+
+/.vscode/
+/config/
+/datasets/
+/outputs/
+/runs/
+/weights/
+/logs/
+/tmp/
+
+x.py
+y.py
+z.py

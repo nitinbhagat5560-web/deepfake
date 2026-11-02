@@ -1,0 +1,48 @@
+{
+  "_comment": "Everything the verdict engine may depend on besides evidence. Roles are a WHITELIST: a module not named here can never move the verdict. allow_uncalibrated=false is the safe default: a number whose genuine range has not been measured cannot be judged, so the channel counts as 'did not run' and the file can only be Can't Verify. Set it to true ONLY while rehearsing a channel you have not calibrated yet, and never for a demo.",
+  "edge_tolerance_s": 1.0,
+  "min_coverage": 0.9,
+  "allow_uncalibrated": false,
+  "roles": {
+    "gate1": {
+      "image": "g1_visual_match",
+      "video": "g1_visual_match"
+    },
+    "aligner": "aligner",
+    "channel_modules": {
+      "picture": "diff_picture",
+      "transcript": "diff_transcript",
+      "sync": "diff_sync"
+    }
+  },
+  "door_channels": {
+    "image": [
+      "alignment",
+      "picture"
+    ],
+    "video": [
+      "alignment",
+      "picture",
+      "transcript",
+      "sync"
+    ]
+  },
+  "channel_order": [
+    "alignment",
+    "picture",
+    "transcript",
+    "sync"
+  ],
+  "channel_verdicts": {
+    "alignment": "edited_spliced",
+    "picture": "edited_picture",
+    "transcript": "edited_audio",
+    "sync": "lips_resynthesized"
+  },
+  "_notes": {
+    "edited_picture": "A name for 'the picture differs'.",
+    "edited_audio": "The speech transcript or acoustic waveform differs from the original.",
+    "lips_resynthesized": "Mouth movement or lip sync differs from the original.",
+    "alignment": "The aligner writes alignment.json and the engine reads it as the 'alignment' channel."
+  }
+}

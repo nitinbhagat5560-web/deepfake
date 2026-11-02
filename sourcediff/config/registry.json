@@ -1,0 +1,110 @@
+{
+  "_comment": "One row per module. 'needs' are ingest flags: a module whose needs are not met is skipped as 'not applicable'. 'python' lets a module run in its own virtualenv. Write your name in 'owner' so two people never edit the same module folder.",
+  "stage_order": [
+    "gate1",
+    "align",
+    "path1"
+  ],
+  "modules": [
+    {
+      "name": "g1_visual_match",
+      "stage": "gate1",
+      "doors": [
+        "image",
+        "video"
+      ],
+      "family": null,
+      "channel": null,
+      "needs": [],
+      "python": null,
+      "timeout_s": 600,
+      "enabled": true,
+      "implemented": true,
+      "implemented_doors": [
+        "image",
+        "video"
+      ],
+      "owner": "",
+      "notes": "image: FAISS + tiny32 thumbnail. video: FAISS on 1 frame/s; non-exact matching stays disabled until its threshold has a report"
+    },
+    {
+      "name": "aligner",
+      "stage": "align",
+      "doors": ["image", "video"],
+      "family": null,
+      "channel": null,
+      "needs": [],
+      "python": null,
+      "timeout_s": 600,
+      "enabled": true,
+      "implemented": true,
+      "implemented_doors": ["image", "video"],
+      "owner": "",
+      "notes": "image: ORB + RANSAC. video: robust frame-timeline fit + jump detection"
+    },
+    {
+      "name": "diff_picture",
+      "stage": "path1",
+      "doors": [
+        "image",
+        "video"
+      ],
+      "family": "source_diff",
+      "channel": "picture",
+      "needs": [],
+      "python": null,
+      "timeout_s": 600,
+      "enabled": true,
+      "implemented": true,
+      "implemented_doors": [
+        "image",
+        "video"
+      ],
+      "owner": "",
+      "notes": "image: ECC-refined block difference + detail check. video: same metrics on 1-second aligned frames"
+    },
+    {
+      "name": "diff_transcript",
+      "stage": "path1",
+      "doors": [
+        "video"
+      ],
+      "family": "source_diff",
+      "channel": "transcript",
+      "needs": [
+        "has_audio"
+      ],
+      "python": null,
+      "timeout_s": 300,
+      "enabled": true,
+      "implemented": true,
+      "implemented_doors": [
+        "video"
+      ],
+      "owner": "",
+      "notes": "video: local faster-whisper word timestamps + waveform comparison; ranges uncalibrated"
+    },
+    {
+      "name": "diff_sync",
+      "stage": "path1",
+      "doors": [
+        "video"
+      ],
+      "family": "source_diff",
+      "channel": "sync",
+      "needs": [
+        "has_face",
+        "has_audio"
+      ],
+      "python": null,
+      "timeout_s": 180,
+      "enabled": true,
+      "implemented": true,
+      "implemented_doors": [
+        "video"
+      ],
+      "owner": "",
+      "notes": "video: per-second paired mouth measurements and AV correlation; skipped when measurements fail"
+    }
+  ]
+}
