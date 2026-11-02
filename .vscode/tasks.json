@@ -1,0 +1,21 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Run sourcediff tests",
+			"type": "shell",
+			"command": "cd /d d:\\deepfake\\sourcediff && d:/deepfake/.venv/Scripts/python.exe -m pytest -q",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"label": "Verify warning fix against the project suite",
+			"type": "shell",
+			"command": "cd /d d:\\deepfake\\sourcediff && d:/deepfake/.venv/Scripts/python.exe -m pytest -q",
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "test"
+		}
+	]
+}
